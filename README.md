@@ -38,9 +38,6 @@ Refer to [naming-convention.md](naming-convention.md)
 
 Detailed requirement in [`docs/business-requirement.md`](docs/business-requirement.md)
 
----
-
-
 ## Support and Maintenance
 For questions or issues with this program:
 - Refer to the code documentation within the program
