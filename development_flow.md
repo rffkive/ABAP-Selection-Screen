@@ -46,8 +46,6 @@ This document outlines the step-by-step technical flow for creating the custom S
 > - Create structures `ZSTR_ERDAT`, `ZSTR_ERNAM`  
 > - Create table types `ZTT_ERDAT`, `ZTT_ERNAM` referencing those structures
 
----
-
 #### 📤 Output Structure
 
 - **Structure Name:** `ZSTR_OUTPUT`
@@ -62,14 +60,11 @@ This document outlines the step-by-step technical flow for creating the custom S
 | VRKME     | `VRKME`          | Sales Unit                |
 
 - notes: Be sure to reference the **table** `ZSTR_OUTPUT` and the **field** `KWMENG` during structure creation to ensure domain consistency and unit integration with `VRKME`.
----
-
+  
 #### 📋 Table Type
 
 - **Table Type Name:** `ZTT_OUTPUT`
 - - **Line Type:** `ZSTR_OUTPUT`
-
----
 
 #### 🔁 Function Module Output
 
