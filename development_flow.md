@@ -27,3 +27,9 @@ This document outlines the step-by-step technical flow for creating the custom S
 - Program Name: ZPRG_SALESORDER
 - Package Assignment: ZPKG_SALESORDER
 - Description: Custom ABAP Report to Display Sales Orders
+
+## 4. Create Function Module
+
+- Transaction: SE37
+- Program Name: ZFM_sALESORDER
+- Description: Function Module for Sales order Display
