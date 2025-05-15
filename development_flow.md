@@ -34,26 +34,45 @@ This document outlines the step-by-step technical flow for creating the custom S
 - Program Name: ZFM_sALESORDER
 - Description: Function Module for Sales order Display
 
- Import:
+#### 📥 Import Parameters
 
-| ERDAT | TYPE | ZTT_ERDAT |
-| ERNAM | TYPE | ZTT_ERNAM | *get the table type for both erdat and erdat. if it doesnt exist. create the structure and the table type.
+| Name   | Type        | Description                      |
+|--------|-------------|----------------------------------|
+| ERDAT  | `ZTT_ERDAT` | Creation Dates (table type)      |
+| ERNAM  | `ZTT_ERNAM` | Created by Users (table type)    |
 
-Output:
+> 🧩 *Note:*  
+> If the table types `ZTT_ERDAT` and `ZTT_ERNAM` do not exist:  
+> - Create structures `ZSTR_ERDAT`, `ZSTR_ERNAM`  
+> - Create table types `ZTT_ERDAT`, `ZTT_ERNAM` referencing those structures
 
-- Create an output structure that will contain all column of the output, ZSTR_OUTPUT.
+---
 
-|VBELN|VBELN_VA|
-|POSNR|POSNR_VA|
-|MATNR|MANTR|
-|MAKTX|MAKTX|
-|KWMENG|KWMENG| *don't forget to ref table: ZSTR_OUTPUT ref field: VRKME
-|VRPKME|VRKME|
+#### 📤 Output Structure
 
-- Create a table type for Output, ZTT_OUTPUT
+- **Structure Name:** `ZSTR_OUTPUT`
 
-  Line Type: ZSTR_OUTPUT
+| Field     | Reference Table | Description               |
+|-----------|------------------|---------------------------|
+| VBELN     | `VBELN_VA`       | Sales Document Number     |
+| POSNR     | `POSNR_VA`       | Item Number               |
+| MATNR     | `MATNR`          | Material Number           |
+| MAKTX     | `MAKTX`          | Material Description      |
+| KWMENG    | `KWMENG`         | Order Quantity            |
+| VRKME     | `VRKME`          | Sales Unit                |
 
-  - Lastly put in output section in FM_SALESORDER
- 
-| ZT_OUTPUT | TYPE | ZTT_OUTPUT |
+- notes: Be sure to reference the **table** `ZSTR_OUTPUT` and the **field** `KWMENG` during structure creation to ensure domain consistency and unit integration with `VRKME`.
+---
+
+#### 📋 Table Type
+
+- **Table Type Name:** `ZTT_OUTPUT`
+- - **Line Type:** `ZSTR_OUTPUT`
+
+---
+
+#### 🔁 Function Module Output
+
+| Name       | Type        | Description                          |
+|------------|-------------|--------------------------------------|
+| ZT_OUTPUT  | `ZTT_OUTPUT`| Output table of Sales Order results  |
