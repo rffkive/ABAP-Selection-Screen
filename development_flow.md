@@ -40,8 +40,8 @@ This document outlines the step-by-step technical flow for creating the custom S
 
 | Name   | Type        | Description                      |
 |--------|-------------|----------------------------------|
-| ERDAT  | `ZTT_ERDAT` | Creation Dates (table type)      |
-| ERNAM  | `ZTT_ERNAM` | Created by Users (table type)    |
+| SERDAT  | `ZTT_ERDAT` | Creation Dates (table type)      |
+| SERNAM  | `ZTT_ERNAM` | Created by Users (table type)    |
 
 > 🧩 *Note:*  
 > If the table types `ZTT_ERDAT` and `ZTT_ERNAM` do not exist:  
@@ -111,6 +111,17 @@ FUNCTION zfm_salesorder.
 
   DATA: lt_maktx TYPE TABLE OF lty_maktx,
         lwa_maktx TYPE lty_maktx.
+
+   IF lt_vbak IS NOT INITIAL.
+    SELECT vbeln,
+            posnr,
+            matnr,
+            kwmeng,
+            vrkme
+      FROM vbap INTO TABLE @lt_vbap
+      FOR ALL ENTRIES IN @lt_vbak "don't use JOIN
+      WHERE vbeln = @lt_vbak-vbeln.
+    ENDIF.
 
 ENDFUNCTION.
 ```
