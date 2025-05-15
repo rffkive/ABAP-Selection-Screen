@@ -81,19 +81,19 @@ FUNCTION zfm_salesorder.
 *"----------------------------------------------------------------------
 *"*"Local Interface:
 *"  IMPORTING
-*"     REFERENCE(ERDAT) TYPE  ZTT_ERDAT
-*"     REFERENCE(ERNAM) TYPE  ZTT_ERNAM
+*"     REFERENCE(SERDAT) TYPE  ZTT_ERDAT
+*"     REFERENCE(SERNAM) TYPE  ZTT_ERNAM
 *"  EXPORTING
 *"     REFERENCE(LT_OUTPUT) TYPE  ZTT_OUTPUT
 *"----------------------------------------------------------------------
-  TYPES : BEGIN OF lty_vbak, "table declaration for vbak.
+  TYPES : BEGIN OF lty_vbak,
             vbeln TYPE vbeln_va,
           END OF lty_vbak.
 
-  DATA : lt_vbak TYPE TABLE OF lty_vbak. "local internal table for vbak
-  DATA : lwa_vbak TYPE lty_vbak. "local work area for vbak
+  DATA : lt_vbak TYPE TABLE OF lty_vbak.
+  DATA : lwa_vbak TYPE lty_vbak.
 
-  TYPES: BEGIN OF lty_vbap, "same with vbak.
+  TYPES: BEGIN OF lty_vbap,
           vbeln TYPE vbeln_va,
           posnr TYPE posnr_va,
           matnr TYPE matnr,
@@ -104,15 +104,21 @@ FUNCTION zfm_salesorder.
   DATA: lt_vbap TYPE TABLE OF lty_vbap,
         lw_vbap TYPE lty_vbap.
 
-  TYPES: BEGIN OF lty_maktx, "same with vbak
+  TYPES: BEGIN OF lty_makt,
           matnr TYPE matnr,
           maktx TYPE maktx,
-         END OF lty_maktx.
+         END OF lty_makt.
 
-  DATA: lt_maktx TYPE TABLE OF lty_maktx,
-        lwa_maktx TYPE lty_maktx.
+  DATA: lt_makt TYPE TABLE OF lty_makt,
+        lwa_makt TYPE lty_makt.
 
-   IF lt_vbak IS NOT INITIAL.
+  SELECT vbeln
+    FROM vbak
+    INTO TABLE @lt_vbak
+    WHERE erdat IN @serdat
+    AND ernam IN @sernam.
+
+  IF lt_vbak IS NOT INITIAL.
     SELECT vbeln,
             posnr,
             matnr,
@@ -121,7 +127,14 @@ FUNCTION zfm_salesorder.
       FROM vbap INTO TABLE @lt_vbap
       FOR ALL ENTRIES IN @lt_vbak "don't use JOIN
       WHERE vbeln = @lt_vbak-vbeln.
-    ENDIF.
+  ENDIF.
 
+  IF lt_vbap IS NOT INITIAL.
+      SELECT matnr, maktx
+        FROM makt
+        INTO TABLE @lt_makt
+        FOR ALL ENTRIES IN @lt_vbap
+        WHERE matnr = @lt_vbap-matnr.
+  ENDIF.
 ENDFUNCTION.
 ```
