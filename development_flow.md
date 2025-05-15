@@ -74,7 +74,7 @@ This document outlines the step-by-step technical flow for creating the custom S
 |------------|-------------|--------------------------------------|
 | ZT_OUTPUT  | `ZTT_OUTPUT`| Output table of Sales Order results  |
 
-Logic: Source Code: 
+#### Logic [Source Code]: 
 
 ```abap
 FUNCTION zfm_salesorder.
@@ -142,3 +142,16 @@ FUNCTION zfm_salesorder.
   ENDIF.
 ENDFUNCTION.
 ```
+
+---
+
+## 5. add language for others through mm02.
+
+- Transaction: mm02.
+- choose material (Example 42 for Iron) > go to additional data > add the language depending on your clients.
+
+for example: 
+|material|description|
+|--------|-----------|
+|EN|Iron|
+|DE|Eisen|
