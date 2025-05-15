@@ -179,3 +179,26 @@ IF lt_vbap IS NOT INITIAL.
       AND spras = sy-langu. "new addition to select only the language based on the system's default languag
   ENDIF.
 ```
+
+---
+
+## 6. add logic to read the program.
+
+```abap
+FUNCTION ZFM_SALESORDER.
+--rest of the program.
+
+ENDIF.
+
+  SORT it_makt BY matnr. "pre-requisite before using binary search 
+  
+  LOOP AT lt_vbak INTO lwa_vbak. "first records will use loop
+    LOOP AT lt_vbap INTO lwa_vbap WHERE vbeln = lwa_vbak-vbeln. "multiple items in the table require loop 
+      READ TABLE it_makt INTO lwa_makt WITH KEY matnr = lwa_vbap-matnr BINARY SEARCH. "only one record better use read table instead of loop to avoid nested loop
+      IF SY-SUBRC = 0.
+        ENDIF.
+      ENDLOOP.
+    ENDLOOP.
+
+ENDFUNCTION
+```
