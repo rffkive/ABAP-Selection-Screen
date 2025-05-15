@@ -155,3 +155,27 @@ for example:
 |--------|-----------|
 |EN|Iron|
 |DE|Eisen|
+
+adjust the logic to make sure that the entries will only chosen based on the language of the system.
+
+```abap
+ TYPES: BEGIN OF lty_makt,
+           matnr TYPE matnr,
+           spras TYPE spras, "new addition for language
+           maktx TYPE maktx,
+         END OF lty_makt.
+```
+
+```abap
+IF lt_vbap IS NOT INITIAL.
+    lt_temp_vbap = lt_vbap.
+    SORT lt_temp_vbap BY matnr. "create temporary table for it vbap and delete duplicates of matnr to improve performance
+    DELETE ADJACENT DUPLICATES FROM lt_temp_vbap COMPARING matnr.
+    SELECT matnr, spras, maktx "new addition to select language from the logic
+      FROM makt
+      INTO TABLE @lt_makt
+      FOR ALL ENTRIES IN @lt_temp_vbap
+      WHERE matnr = @lt_temp_vbap-matnr
+      AND spras = sy-langu. "new addition to select only the language based on the system's default languag
+  ENDIF.
+```
