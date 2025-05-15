@@ -28,6 +28,8 @@ This document outlines the step-by-step technical flow for creating the custom S
 - Package Assignment: ZPKG_SALESORDER
 - Description: Custom ABAP Report to Display Sales Orders
 
+---
+
 ## 4. Create Function Module
 
 - Transaction: SE37
@@ -71,3 +73,44 @@ This document outlines the step-by-step technical flow for creating the custom S
 | Name       | Type        | Description                          |
 |------------|-------------|--------------------------------------|
 | ZT_OUTPUT  | `ZTT_OUTPUT`| Output table of Sales Order results  |
+
+Logic: Source Code: 
+
+```abap
+FUNCTION zfm_salesorder.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(ERDAT) TYPE  ZTT_ERDAT
+*"     REFERENCE(ERNAM) TYPE  ZTT_ERNAM
+*"  EXPORTING
+*"     REFERENCE(LT_OUTPUT) TYPE  ZTT_OUTPUT
+*"----------------------------------------------------------------------
+  TYPES : BEGIN OF lty_vbak, "table declaration for vbak.
+            vbeln TYPE vbeln_va,
+          END OF lty_vbak.
+
+  DATA : lt_vbak TYPE TABLE OF lty_vbak. "local internal table for vbak
+  DATA : lwa_vbak TYPE lty_vbak. "local work area for vbak
+
+  TYPES: BEGIN OF lty_vbap, "same with vbak.
+          vbeln TYPE vbeln_va,
+          posnr TYPE posnr_va,
+          matnr TYPE matnr,
+          kwmeng TYPE kwmeng,
+          vrkme TYPE vrkme,
+         END OF lty_vbap.
+
+  DATA: lt_vbap TYPE TABLE OF lty_vbap,
+        lw_vbap TYPE lty_vbap.
+
+  TYPES: BEGIN OF lty_maktx, "same with vbak
+          matnr TYPE matnr,
+          maktx TYPE maktx,
+         END OF lty_maktx.
+
+  DATA: lt_maktx TYPE TABLE OF lty_maktx,
+        lwa_maktx TYPE lty_maktx.
+
+ENDFUNCTION.
+```
