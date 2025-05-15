@@ -102,6 +102,7 @@ FUNCTION zfm_salesorder.
          END OF lty_vbap.
 
   DATA: lt_vbap TYPE TABLE OF lty_vbap,
+        lt_temp_vbap TYPE TABLE OF lty_vbap,
         lw_vbap TYPE lty_vbap.
 
   TYPES: BEGIN OF lty_makt,
@@ -130,11 +131,14 @@ FUNCTION zfm_salesorder.
   ENDIF.
 
   IF lt_vbap IS NOT INITIAL.
+    lt_temp_vbap = lt_vbap.
+    SORT lt_temp_vbap BY MATNR. "create temporary table for it vbap and delete duplicates of matnr to improve performance
+    DELETE ADJACENT DUPLICATES FROM lt_temp_vbap COMPARING matnr.
       SELECT matnr, maktx
         FROM makt
         INTO TABLE @lt_makt
-        FOR ALL ENTRIES IN @lt_vbap
-        WHERE matnr = @lt_vbap-matnr.
+        FOR ALL ENTRIES IN @lt_temp_vbap
+        WHERE matnr = @lt_temp_vbap-matnr.
   ENDIF.
 ENDFUNCTION.
 ```
