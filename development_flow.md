@@ -202,3 +202,7 @@ ENDIF.
 
 ENDFUNCTION
 ```
+
+> notes:
+> using binary search in read table to improve performance.
+> using read table instead of loop for one to one relationship to improve performance as well.
