@@ -204,8 +204,8 @@ ENDFUNCTION
 ```
 
 > notes:
-> using binary search in read table to improve performance.
-> using read table instead of loop for one to one relationship to improve performance as well.
+> - using binary search in read table to improve performance.
+> - using read table instead of loop for one to one relationship to improve performance as well.
 
 ```abap
 DATA: lv_index TYPE I. "declaration for the lv_index
@@ -235,9 +235,9 @@ ENDFUNCTION.
 ```
 
 > notes
-> put the selected data into wa of output.
-> lv_index to declare which iteration it's currently at.
-> using read table inside loop for 1 to many relationship to reduce the number of entries needed to be read and only read the matching entries with the same selection (in this case VBELN).
-> add sort as pre-requisite for the binary search in read table.
-> lastly, put the data from work area to the internal table and clear the work area to undergo loop again.
+> - put the selected data into wa of output.
+> - lv_index to declare which iteration it's currently at.
+> - using read table inside loop for 1 to many relationship to reduce the number of entries needed to be read and only read the matching entries with the same selection (in this case VBELN).
+> - add sort as pre-requisite for the binary search in read table.
+> - lastly, put the data from work area to the internal table and clear the work area to undergo loop again.
 
