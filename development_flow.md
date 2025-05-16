@@ -206,3 +206,38 @@ ENDFUNCTION
 > notes:
 > using binary search in read table to improve performance.
 > using read table instead of loop for one to one relationship to improve performance as well.
+
+```abap
+DATA: lv_index TYPE I. "declaration for the lv_index
+
+SORT lt_vbap BY vbeln. "pre-requisite for the new read table
+
+  LOOP AT lt_vbak INTO lwa_vbak. "first records will use loop
+    lwa_output-vbeln = lwa_vbak-vbeln. "get vbeln from vbak
+    READ TABLE lt_vbap INTO lwa_vbap WITH KEY vbeln = lwa_vbak-vbeln BINARY SEARCH. "To improve performance by reducing the iteration that each entries should read. they will read only the matching vbeln.
+    IF SY-SUBRC = 0.
+      lv_index = sy-tabix. "declare the current iteration
+      ENDIF.
+    LOOP AT lt_vbap INTO lwa_vbap WHERE vbeln = lwa_vbak-vbeln.
+      lwa_output-posnr = lwa_vbap-posnr. "get posnr, matnr, kwmneg, vrkme from vbap
+      lwa_output-matnr = lwa_vbap-matnr.
+      lwa_output-kwmeng = lwa_vbap-kwmeng.
+      lwa_output-vrkme = lwa_vbap-vrkme.
+      READ TABLE lt_makt INTO lwa_makt WITH KEY matnr = lwa_vbap-matnr BINARY SEARCH.
+      IF SY-SUBRC = 0.
+           lwa_output-maktx = lwa_makt-maktx. "get maktx from makt table
+        ENDIF.
+        APPEND lwa_output TO lt_output. "insert the data from the work area to the internal table
+        CLEAR: lwa_output. "clear internal table
+      ENDLOOP.
+    ENDLOOP.
+ENDFUNCTION.
+```
+
+> notes
+> put the selected data into wa of output.
+> lv_index to declare which iteration it's currently at.
+> using read table inside loop for 1 to many relationship to reduce the number of entries needed to be read and only read the matching entries with the same selection (in this case VBELN).
+> add sort as pre-requisite for the binary search in read table.
+> lastly, put the data from work area to the internal table and clear the work area to undergo loop again.
+
