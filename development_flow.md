@@ -205,6 +205,7 @@ ENDFUNCTION
 
 > notes:
 > - using binary search in read table to improve performance.
+> - Purpose: Use binary search to quickly find the first occurrence of the same matnr in lt_makt (must be sorted beforehand).
 > - using read table instead of loop for one to one relationship to improve performance as well.
 
 ```abap
@@ -240,4 +241,34 @@ ENDFUNCTION.
 > - using read table inside loop for 1 to many relationship to reduce the number of entries needed to be read and only read the matching entries with the same selection (in this case VBELN).
 > - add sort as pre-requisite for the binary search in read table.
 > - lastly, put the data from work area to the internal table and clear the work area to undergo loop again.
+
+
+```abap
+ LOOP AT lt_vbak INTO lwa_vbak. 
+    lwa_output-vbeln = lwa_vbak-vbeln. 
+    READ TABLE lt_vbap INTO lwa_vbap WITH KEY vbeln = lwa_vbak-vbeln BINARY SEARCH.
+    IF sy-subrc = 0.
+      lv_index = sy-tabix.
+    ENDIF.
+    LOOP AT lt_vbap INTO lwa_vbap FROM lv_index. "change from referencing the vbeln from vbak to reference the lv_index instead
+      IF lwa_vbak-vbeln = lwa_vbap-vbeln. "if there's matching will put the value to the wa and continue the process
+        lwa_output-posnr = lwa_vbap-posnr. 
+        lwa_output-matnr = lwa_vbap-matnr.
+        lwa_output-kwmeng = lwa_vbap-kwmeng.
+        lwa_output-vrkme = lwa_vbap-vrkme.
+        READ TABLE lt_makt INTO lwa_makt WITH KEY matnr = lwa_vbap-matnr BINARY SEARCH.
+        IF sy-subrc = 0.
+          lwa_output-maktx = lwa_makt-maktx.
+        ENDIF.
+        APPEND lwa_output TO lt_output.
+        CLEAR: lwa_output.
+      ELSE. "else will continue to next iteration
+        EXIT.
+      ENDIF.
+    ENDLOOP.
+  ENDLOOP.
+```
+
+> notes
+> - switch from loop at the matching occurence of vbeln to lv_index. The reason why is because we already sort based on the matching vbeln and binary search to find the first matching row, looping from index will only start looping from that index instead of looping from the start of entire internal table.
 
